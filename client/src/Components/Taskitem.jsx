@@ -31,7 +31,9 @@ const TaskItem = ({ task }) => {
       });
 
       if (result.isConfirmed) {
-        await axios.put(`http://localhost:4000/task/complete/${task._id}`);
+        await axios.put(`http://localhost:4000/task/complete/${task._id}`, {
+          // completed: completed;
+        });
         dispatch(completeTask(task._id));
         Swal.fire(
           "Completed!",
@@ -49,9 +51,36 @@ const TaskItem = ({ task }) => {
     }
   };
 
-  const handleDelete = () => {
-    dispatch(deleteTask(task.id));
+  const handleDelete = async () => {
+    try {
+      const result = await Swal.fire({
+        title: " Delete Task?",
+        text: "Are you sure you want to delete this task?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      });
+
+      if (result.isConfirmed) {
+        await axios.put(`http://localhost:4000/task/delete/${task._id}`);
+        dispatch(deleteTask(task._id));
+        Swal.fire(" Deleted!", "The task has been  deleted.", "success");
+      }
+    } catch (error) {
+      console.error("Error  deleting task:", error);
+      Swal.fire(
+        "Error",
+        "An error occurred while  deleting the task.",
+        "error"
+      );
+    }
   };
+
+  // const handleDelete = () => {
+  //   dispatch(deleteTask());
+  // };
 
   const handleUpdate = () => {
     setIsModalOpen(true);

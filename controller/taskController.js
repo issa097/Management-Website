@@ -129,7 +129,7 @@ exports.createTask = async (req, res) => {
   try {
     // Assuming userId is available from authentication
     const userId = req.body.user_id;
-    
+
     console.log(req.body);
     const newTask = new Task({
       ...req.body,
@@ -157,7 +157,6 @@ exports.getAllTasksuser = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 // Get all tasks for a specific user
 exports.getAllTasks = async (req, res) => {
@@ -216,11 +215,11 @@ exports.updateTaskById = async (req, res) => {
 exports.deleteTaskById = async (req, res) => {
   try {
     // يفترض أن يكون userId متاحًا من عملية المصادقة
-    const userId = req.body.userId;
-    console.log(userId, req.params.user_id);
+    // const userId = req.body.userId;
+    // console.log(userId, req.params.user_id);
     // تحديث حقل is_deleted بدلاً من الحذف الفعلي
     const deletedTask = await Task.findOneAndUpdate(
-      { user_id: req.params.user_id },
+      { _id: req.params._id },
       { $set: { is_deleted: true } },
       { new: true } // يعيد الوثيقة المحدثة بدلاً من الوثيقة القديمة
     );
@@ -241,7 +240,7 @@ exports.completeTaskById = async (req, res) => {
 
     // تحديث حقل is_deleted بدلاً من الحذف الفعلي
     const deletedTask = await Task.findOneAndUpdate(
-      { user_id: req.params.user_id },
+      { _id: req.params._id },
       { $set: { completed: true } },
       { new: true } // يعيد الوثيقة المحدثة بدلاً من الوثيقة القديمة
     );
